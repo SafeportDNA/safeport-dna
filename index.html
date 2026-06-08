@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safeport DNA — Safety Professional Assessment</title>
+<style>
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-serif: Georgia, 'Times New Roman', serif;
+  --bg: #f8f9f8;
+  --surface: #f0f4f0;
+  --card: #ffffff;
+  --border: #e2e8e2;
+  --ink: #111813;
+  --ink2: #3d4a3e;
+  --muted: #8a9e8b;
+  --accent: #4a9e2f;
+  --accent-dark: #357a20;
+  --accent-light: #eef6ea;
+  --accent2: #2a6e8e;
+  --line: rgba(17,24,19,0.07);
+  --red: #c0392b;
+  --sidebar-bg: #0d1f10;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:transparent;color:var(--ink);font-family:var(--font-sans);min-height:100vh;font-size:16px;}
+.screen{display:none;}
+.screen.active{display:block;}
+
+/* LOGO */
+.logo-wrap{display:flex;align-items:center;gap:10px;}
+.logo-mark{width:34px;height:34px;flex-shrink:0;}
+.logo-text{font-size:14px;font-weight:700;letter-spacing:0.03em;color:var(--ink);}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:white;font-size:13px;font-weight:600;letter-spacing:0.05em;padding:14px 32px;border:none;border-radius:7px;cursor:pointer;transition:all 0.2s;font-family:var(--font-sans);}
+.btn-primary:hover{background:var(--accent-dark);transform:translateY(-1px);}
+.btn-primary svg{width:14px;height:14px;fill:white;}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--muted);font-size:12px;font-weight:500;padding:12px 20px;border:1px solid var(--border);border-radius:7px;cursor:pointer;transition:all 0.2s;font-family:var(--font-sans);}
+.btn-secondary:hover{color:var(--ink);border-color:var(--ink2);}
+
+/* LANDING */
+#screen-landing{min-height:100vh;display:none;align-items:center;justify-content:center;}
+#screen-landing.active{display:flex;}
+.landing-inner{max-width:700px;padding:60px 48px;text-align:center;}
+.landing-logo{justify-content:center;margin-bottom:52px;}
+.landing-logo .logo-text{color:var(--ink);}
+.landing-tag{font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:18px;}
+.landing-h1{font-family:var(--font-serif);font-size:clamp(36px,6vw,54px);font-weight:700;line-height:1.1;color:var(--ink);margin-bottom:18px;}
+.landing-h1 em{font-style:italic;font-weight:400;color:var(--accent);}
+.landing-body{font-size:15px;color:var(--ink2);line-height:1.78;font-weight:300;margin-bottom:40px;max-width:440px;margin-left:auto;margin-right:auto;}
+.stat-row{display:flex;justify-content:center;gap:44px;margin-bottom:44px;}
+.stat-n{font-size:28px;font-weight:700;color:var(--ink);line-height:1;}
+.stat-l{font-size:11px;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:44px;padding-top:36px;border-top:1px solid var(--line);}
+.chip{font-size:11px;font-weight:500;color:var(--ink2);background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 14px;}
+
+/* INTAKE */
+#screen-intake{min-height:100vh;display:none;align-items:center;justify-content:center;}
+#screen-intake.active{display:flex;}
+.intake-inner{max-width:600px;width:100%;padding:60px 48px;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);cursor:pointer;background:none;border:none;font-family:var(--font-sans);margin-bottom:40px;}
+.back-btn:hover{color:var(--ink);}
+.intake-h{font-family:var(--font-serif);font-size:32px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.intake-sub{font-size:14px;color:var(--muted);margin-bottom:32px;line-height:1.65;}
+.field{margin-bottom:18px;}
+.field-label{display:block;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink2);margin-bottom:6px;}
+.field-input,.field-select{width:100%;border:1px solid var(--border);background:var(--card);color:var(--ink);font-family:var(--font-sans);font-size:14px;padding:11px 14px;border-radius:7px;outline:none;transition:border-color 0.15s;appearance:none;}
+.field-input:focus,.field-select:focus{border-color:var(--accent);}
+.field-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238a9e8b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;}
+.fields-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.disclaimer{font-size:12px;color:var(--muted);line-height:1.65;padding:14px 16px;border-radius:7px;background:var(--surface);border:1px solid var(--border);margin-bottom:28px;}
+.warn-text{font-size:12px;color:var(--red);margin-top:10px;font-style:italic;display:none;}
+
+/* ASSESSMENT */
+#screen-assessment{min-height:100vh;}
+.assessment-shell{display:grid;grid-template-columns:220px 1fr;min-height:100vh;}
+.sidebar{background:var(--sidebar-bg);padding:36px 24px;position:sticky;top:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column;}
+.sidebar .logo-text{color:rgba(255,255,255,0.9);}
+.sidebar-logo{margin-bottom:44px;}
+.progress-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:8px;}
+.progress-track{height:2px;background:rgba(255,255,255,0.1);border-radius:2px;margin-bottom:32px;}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.4s ease;width:0%;}
+.sidebar-sections{flex:1;}
+.sidebar-sec{display:flex;align-items:center;gap:12px;padding:9px 0;opacity:0.28;transition:opacity 0.3s;}
+.sidebar-sec.active{opacity:1;}
+.sidebar-sec.done{opacity:0.5;}
+.ss-num{width:22px;height:22px;border:1.5px solid rgba(255,255,255,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:rgba(255,255,255,0.35);flex-shrink:0;transition:all 0.3s;}
+.sidebar-sec.active .ss-num{border-color:var(--accent);background:var(--accent);color:white;}
+.sidebar-sec.done .ss-num{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);}
+.ss-label{font-size:12px;font-weight:500;color:rgba(255,255,255,0.5);}
+.sidebar-sec.active .ss-label{color:white;font-weight:600;}
+.sidebar-foot{margin-top:auto;padding-top:24px;border-top:1px solid rgba(255,255,255,0.06);font-size:11px;color:rgba(255,255,255,0.18);line-height:1.5;}
+.a-main{padding:56px 80px;max-width:860px;}
+.q-section{display:none;}
+.q-section.active{display:block;}
+.sec-intro{margin-bottom:40px;padding-bottom:28px;border-bottom:1px solid var(--line);}
+.sec-num{font-size:11px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.sec-title{font-family:var(--font-serif);font-size:26px;font-weight:700;color:var(--ink);margin-bottom:8px;}
+.sec-body{font-size:13px;color:var(--muted);line-height:1.7;}
+.q-block{margin-bottom:32px;animation:fadeUp 0.32s ease forwards;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.q-num{font-size:10px;font-weight:600;letter-spacing:0.14em;color:var(--muted);text-transform:uppercase;margin-bottom:7px;}
+.q-text{font-size:15px;color:var(--ink);line-height:1.65;margin-bottom:14px;}
+.options{display:flex;flex-direction:column;}
+.opt-btn{display:flex;align-items:flex-start;gap:13px;padding:12px 15px;border:1px solid var(--border);border-top:none;background:var(--card);cursor:pointer;text-align:left;width:100%;font-family:var(--font-sans);color:var(--ink2);font-size:13.5px;line-height:1.55;transition:all 0.13s;}
+.opt-btn:first-child{border-top:1px solid var(--border);border-radius:7px 7px 0 0;}
+.opt-btn:last-child{border-radius:0 0 7px 7px;}
+.opt-btn:hover{background:var(--accent-light);border-color:var(--accent);z-index:1;position:relative;}
+.opt-btn:hover+.opt-btn{border-top-color:var(--accent);}
+.opt-btn.selected{background:var(--accent-light);border-color:var(--accent)!important;color:var(--ink);position:relative;z-index:2;}
+.opt-btn.selected+.opt-btn{border-top-color:var(--accent);}
+.opt-radio{width:16px;height:16px;border:1.5px solid var(--border);border-radius:50%;flex-shrink:0;margin-top:3px;display:flex;align-items:center;justify-content:center;transition:all 0.13s;}
+.opt-btn.selected .opt-radio{border-color:var(--accent);background:var(--accent);}
+.opt-btn.selected .opt-radio::after{content:'';width:5px;height:5px;border-radius:50%;background:white;}
+.sec-nav{display:flex;align-items:center;gap:10px;margin-top:40px;padding-top:28px;border-top:1px solid var(--line);}
+.nav-counter{font-size:11px;color:var(--muted);margin-left:auto;}
+.unanswered-note{font-size:12px;color:var(--red);margin-top:8px;font-style:italic;display:none;}
+
+/* RESULTS */
+#screen-results{min-height:100vh;}
+.results-wrap{max-width:860px;margin:0 auto;padding:72px 48px;}
+.results-header{text-align:center;margin-bottom:52px;padding-bottom:44px;border-bottom:1px solid var(--line);}
+.results-logo{justify-content:center;margin-bottom:28px;}
+.results-tag{font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;}
+.results-name{font-family:var(--font-serif);font-size:clamp(28px,5vw,46px);font-style:italic;color:var(--ink);margin-bottom:6px;line-height:1.1;}
+.results-sub{font-size:13px;color:var(--muted);}
+.primary-card{background:var(--sidebar-bg);border-radius:10px;padding:40px;margin-bottom:10px;position:relative;overflow:hidden;}
+.primary-card::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:rgba(74,158,47,0.08);}
+.pc-tag{font-size:10px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.38);margin-bottom:10px;}
+.pc-name{font-family:var(--font-serif);font-size:clamp(26px,4vw,38px);font-weight:700;color:white;margin-bottom:4px;line-height:1.1;}
+.pc-sub{font-size:14px;color:rgba(255,255,255,0.5);font-style:italic;margin-bottom:18px;}
+.pc-accent-bar{width:40px;height:3px;background:var(--accent);border-radius:2px;margin-bottom:16px;}
+.pc-desc{font-size:14px;color:rgba(255,255,255,0.78);line-height:1.78;}
+.secondary-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px 26px;display:flex;align-items:center;gap:20px;margin-bottom:44px;}
+.sc-left{min-width:0;}
+.sc-tag{font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.sc-name{font-size:16px;font-weight:700;color:var(--ink);}
+.sc-div{width:1px;height:36px;background:var(--border);flex-shrink:0;}
+.sc-note{font-size:13px;color:var(--muted);line-height:1.6;flex:1;}
+.section-label{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:12px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--line);}
+.fit-cards{margin-bottom:44px;display:flex;flex-direction:column;gap:8px;}
+.fit-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px 22px;}
+.fit-card-tag{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:5px;}
+.fit-card-text{font-size:13.5px;color:var(--ink2);line-height:1.7;}
+.score-rows{margin-bottom:44px;}
+.score-row{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);}
+.score-row:first-child{border-top:1px solid var(--line);}
+.score-name{font-size:13px;font-weight:600;color:var(--ink);width:160px;flex-shrink:0;}
+.score-track{flex:1;height:4px;background:var(--border);border-radius:3px;overflow:hidden;}
+.score-fill{height:100%;border-radius:3px;width:0%;transition:width 1s ease;}
+.score-row.rank-1 .score-fill{background:var(--accent);}
+.score-row.rank-2 .score-fill{background:var(--accent2);}
+.score-row.rank-3 .score-fill{background:#8a6a10;}
+.score-row.rank-4 .score-fill,.score-row.rank-5 .score-fill,.score-row.rank-6 .score-fill{background:#c8d4c8;}
+.score-pct{font-size:12px;font-weight:600;color:var(--ink2);width:36px;text-align:right;flex-shrink:0;}
+.score-row.rank-4 .score-pct,.score-row.rank-5 .score-pct,.score-row.rank-6 .score-pct{color:var(--muted);font-weight:400;}
+.next-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:26px 30px;margin-bottom:32px;}
+.next-h{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:10px;}
+.next-body{font-size:13.5px;color:var(--ink2);line-height:1.8;}
+.results-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.email-status{font-size:12px;font-weight:500;margin-top:10px;min-height:18px;}
+
+@media(max-width:768px){
+  .assessment-shell{grid-template-columns:1fr;}
+  .sidebar{position:relative;height:auto;padding:20px;}
+  .sidebar-sections{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;}
+  .sidebar-sec{flex-shrink:0;}
+  .a-main{padding:28px 20px;}
+  .fields-2{grid-template-columns:1fr;}
+  .secondary-card{flex-direction:column;gap:10px;}
+  .sc-div{display:none;}
+}
+@media print{
+  #screen-landing,#screen-intake,#screen-assessment{display:none!important;}
+  #screen-results{display:block!important;}
+  .results-actions{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="screen-landing" class="screen active">
+  <div class="landing-inner">
+    <div class="landing-tag">Safety Professional Assessment</div>
+    <h1 class="landing-h1">Where do you<br><em>fit best?</em></h1>
+    <p class="landing-body">Every great safety professional has a natural strength profile. This assessment helps Safeport match you to the projects and environments where you'll do your best work.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="stat-n">25</div><div class="stat-l">Questions</div></div>
+      <div class="stat"><div class="stat-n">~10</div><div class="stat-l">Minutes</div></div>
+      <div class="stat"><div class="stat-n">6</div><div class="stat-l">Archetypes</div></div>
+    </div>
+    <button class="btn-primary" onclick="goToIntake()">Begin Assessment <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    <div class="chips">
+      <span class="chip">The Diplomat</span><span class="chip">The Enforcer</span><span class="chip">The Educator</span>
+      <span class="chip">The Crisis Manager</span><span class="chip">The Auditor</span><span class="chip">The Strategist</span>
+    </div>
+  </div>
+</div>
+
+<!-- INTAKE -->
+<div id="screen-intake" class="screen">
+  <div class="intake-inner">
+    <button class="back-btn" onclick="goToLanding()">← Back</button>
+    <h2 class="intake-h">Before we begin</h2>
+    <p class="intake-sub">A few details help Safeport contextualize your results alongside your background.</p>
+    <div class="fields-2">
+      <div class="field"><label class="field-label">First Name *</label><input class="field-input" id="first-name" type="text" placeholder="First name"></div>
+      <div class="field"><label class="field-label">Last Name *</label><input class="field-input" id="last-name" type="text" placeholder="Last name"></div>
+    </div>
+    <div class="field"><label class="field-label">Email *</label><input class="field-input" id="email" type="email" placeholder="you@example.com"></div>
+    <div class="fields-2">
+      <div class="field"><label class="field-label">Years in Safety</label>
+        <select class="field-select" id="years-exp">
+          <option value="">Select range</option>
+          <option>Less than 1 year</option><option>1–3 years</option><option>4–7 years</option><option>8–15 years</option><option>15+ years</option>
+        </select>
+      </div>
+      <div class="field"><label class="field-label">Primary Industry</label>
+        <select class="field-select" id="industry">
+          <option value="">Select industry</option>
+          <option>Commercial Construction</option><option>Heavy Civil / Infrastructure</option><option>Industrial / Manufacturing</option><option>Oil, Gas & Petrochemical</option><option>Electrical / Utilities</option><option>Marine / Offshore</option><option>Healthcare / Life Sciences</option><option>Government / Public Sector</option><option>Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="disclaimer">There are no right or wrong answers — respond based on how you <em>actually</em> think and behave on the job, not how you think you should.</div>
+    <button class="btn-primary" onclick="startAssessment()">Start Assessment <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:white"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+    <div class="warn-text" id="intake-warn">Please fill in your name and email before continuing.</div>
+  </div>
+</div>
+
+<!-- ASSESSMENT -->
+<div id="screen-assessment" class="screen">
+  <div style="width:100%;height:4px;background:#f0f4f0;"><div id="sidebar-progress" style="height:100%;background:#4a9e2f;transition:width 0.4s ease;width:0%;"></div></div>
+  <div id="sidebar-sections" style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;padding:14px 20px;border-bottom:1px solid rgba(17,24,19,0.07);"></div>
+  <div style="width:100%;padding:40px 32px;box-sizing:border-box;">
+    <div id="question-sections"></div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="screen-results" class="screen">
+  <div class="results-wrap">
+    <div class="results-header">
+      <div class="results-tag">Assessment Complete · Safeport DNA</div>
+      <div class="results-name" id="res-name"></div>
+      <div class="results-sub">Your Safety DNA Profile</div>
+    </div>
+    <div id="primary-block"></div>
+    <div id="secondary-block"></div>
+    <div class="section-label">Recommended Environments</div>
+    <div class="fit-cards" id="fit-cards"></div>
+    <div class="section-label">Full Archetype Breakdown</div>
+    <div class="score-rows" id="score-rows"></div>
+    <div class="next-card" id="next-card"></div>
+    <div class="results-actions">
+      <button class="btn-primary" onclick="window.print()">Save / Print PDF <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:white"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg></button>
+      <button class="btn-secondary" onclick="retakeAssessment()">Retake</button>
+    </div>
+    <div id="email-status" style="font-size:13px;font-weight:500;margin-top:12px;min-height:20px;color:var(--muted);">Sending results to Safeport DNA...</div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──
+const EJS_SERVICE  = 'service_isz63dw';
+const EJS_TEMPLATE = 'template_2t434av';
+const EJS_KEY      = '5ivZWCJp6exta7344';
+
+// ── DATA ──
+const SECTIONS = [
+  {id:'field-approach', label:'Field Approach'},
+  {id:'compliance',     label:'Compliance & Rules'},
+  {id:'people',         label:'People & Teaching'},
+  {id:'pressure',       label:'Pressure & Crisis'},
+  {id:'analysis',       label:'Analysis & Strategy'},
+];
+
+const QUESTIONS = [
+  {section:'field-approach',text:"You walk onto a job site and immediately spot a crew ignoring required fall protection on an elevated platform. Your first move is:",options:[{text:"Stop the work, walk up to the crew, and have a direct but respectful conversation to understand why before deciding next steps.",scores:[4,3,2,2,1,1]},{text:"Stop the work, identify the crew lead, issue a formal written corrective action, and document it in the site log.",scores:[1,5,1,2,2,2]},{text:"Stop the work, correct the immediate hazard, then walk the crew through why fall protection exists and how to use it correctly.",scores:[2,2,5,1,1,1]},{text:"Stop the work immediately, take command, clear the zone, and ensure the hazard is abated before anyone moves.",scores:[1,2,1,5,2,1]},{text:"Stop the work, document the observation in detail, photograph conditions, and log it as a leading indicator.",scores:[1,2,1,1,5,2]}]},
+  {section:'field-approach',text:"A subcontractor foreman tells you the requirement you flagged 'slows them down' and they've 'never had a problem before.' How do you respond?",options:[{text:"Acknowledge the production pressure and work together to find a compliant method that doesn't kill their schedule.",scores:[5,1,2,2,1,2]},{text:"Cite the exact standard, explain compliance is not optional, and issue a formal notice if they don't comply.",scores:[1,5,1,2,1,2]},{text:"Take time to explain the actual hazard the requirement prevents so they understand the 'why' behind the rule.",scores:[2,1,5,1,1,2]},{text:"Hold the line firmly, escalate to the PM if necessary, and ensure work doesn't resume until compliant.",scores:[2,4,1,4,1,2]},{text:"Document the pushback and flag it as a behavioral leading indicator.",scores:[1,2,1,1,5,3]}]},
+  {section:'field-approach',text:"End of a long day — you notice a crew doing a task that technically requires a permit. Nobody sees you. You:",options:[{text:"Walk over and explain the permit requirement calmly, and help them get it squared away.",scores:[5,2,2,1,1,1]},{text:"Stop the work. A permit requirement is a permit requirement, regardless of time of day.",scores:[1,5,1,2,1,1]},{text:"Use it as a teaching moment — explain the permit process so they won't skip it next time.",scores:[2,1,5,1,2,1]},{text:"Stop the work and assess whether the unpermitted task poses an active hazard.",scores:[1,2,1,5,1,1]},{text:"Document the observation, the time, the activity, and the crew as an at-risk behavior.",scores:[1,2,1,1,5,2]}]},
+  {section:'field-approach',text:"Which most accurately describes how crews think of you?",options:[{text:"Someone they actually want to talk to — the person they come to first when something feels off.",scores:[5,1,2,1,1,1]},{text:"Strict, consistent, and fair — they know exactly where the line is and that you'll enforce it.",scores:[1,5,1,1,1,1]},{text:"The one who actually explains things — they've learned from working with me, not just been corrected.",scores:[2,1,5,1,1,1]},{text:"The one you want around if something goes seriously wrong — calm, decisive, knows what to do.",scores:[1,1,1,5,1,1]},{text:"Thorough and detail-oriented — they know I'll catch what others miss.",scores:[1,1,1,1,5,2]}]},
+  {section:'field-approach',text:"You're assigned to a brand-new project site with an unfamiliar crew on Day 1. Your priority for the first week:",options:[{text:"Building relationships — learn names, understand informal leaders, earn trust so crews talk to me.",scores:[5,1,2,1,1,1]},{text:"Audit the site against every applicable standard before work accelerates.",scores:[1,4,1,1,4,2]},{text:"Assess the crew's baseline safety knowledge and design targeted toolbox talks.",scores:[2,1,5,1,1,1]},{text:"Map the emergency action plan and identify every high-risk activity in the schedule.",scores:[1,2,1,5,2,2]},{text:"Pull the project's lagging indicators and near-miss logs to understand the site's risk profile.",scores:[1,2,1,1,4,5]}]},
+  {section:'compliance',text:"A safety regulation you're enforcing seems technically correct but doesn't fully address the actual hazard. You:",options:[{text:"Comply as written and separately open a conversation with site leadership about the gap.",scores:[4,3,1,1,2,2]},{text:"Enforce the regulation exactly as written. Interpretation is not my role — compliance is.",scores:[1,5,1,1,1,1]},{text:"Explain both the written requirement and the broader hazard principle to the crew.",scores:[2,1,5,1,1,1]},{text:"Add precautions beyond the regulation — the standard is the floor, not the ceiling.",scores:[1,3,1,3,1,5]},{text:"Document the gap, research consensus standards, and submit a formal recommendation.",scores:[1,2,1,1,3,5]}]},
+  {section:'compliance',text:"Senior management tells you to 'let this one slide' because it would delay a critical milestone. Your response:",options:[{text:"Have a candid conversation about the risk — explain the liability exposure and work toward a compliant solution.",scores:[4,3,1,2,2,1]},{text:"Refuse. Document the directive in writing and formally notify them I cannot approve the deviation.",scores:[1,5,1,1,1,1]},{text:"Use it to educate management on the why behind the standard.",scores:[2,1,5,1,1,1]},{text:"Hold the line, escalate as necessary, and ensure I have a clear paper trail.",scores:[1,4,1,2,3,2]},{text:"Quantify the risk — pull incident data and present the business case for compliance.",scores:[1,2,1,1,5,3]}]},
+  {section:'compliance',text:"How would you describe your personal relationship with safety regulations?",options:[{text:"They're a framework for conversation — I use them to guide crews toward safer behavior.",scores:[5,1,3,1,1,1]},{text:"Non-negotiable baseline. Every deviation is a liability.",scores:[1,5,1,1,1,1]},{text:"A curriculum — each standard is an opportunity to teach someone why a hazard matters.",scores:[1,1,5,1,1,1]},{text:"Emergency protocols first — in a crisis, practical response takes command.",scores:[1,2,1,5,1,1]},{text:"Data inputs — standards define the benchmark; I use them to measure performance.",scores:[1,2,1,1,5,2]}]},
+  {section:'compliance',text:"A worker has received three written warnings for the same infraction across three different supervisors. Your approach:",options:[{text:"Meet with him one-on-one — written warnings alone clearly aren't working.",scores:[5,1,3,1,1,1]},{text:"Issue the fourth and final corrective action and initiate the formal removal process.",scores:[1,5,1,1,1,1]},{text:"Dig into whether the previous warnings actually communicated the hazard clearly.",scores:[2,1,5,1,2,1]},{text:"Assess whether his behavior pattern represents an active safety risk requiring removal.",scores:[1,3,1,4,2,1]},{text:"Analyze whether the repeated infraction points to a systemic training or process failure.",scores:[1,2,2,1,5,3]}]},
+  {section:'compliance',text:"When you inspect a work area, what do you typically walk away with?",options:[{text:"A sense of the crew's relationship to safety — their body language, whether they feel heard.",scores:[5,1,2,1,1,1]},{text:"A complete, formally documented inspection report with every finding classified by severity.",scores:[1,5,1,1,2,1]},{text:"A list of things I can use as teaching opportunities in the next toolbox talk.",scores:[2,1,5,1,1,1]},{text:"A clear picture of the highest-consequence hazards on that site right now.",scores:[1,2,1,5,2,2]},{text:"Quantified data — observation counts, hazard frequencies, trend comparisons.",scores:[1,1,1,1,5,2]}]},
+  {section:'people',text:"You're running a toolbox talk and half the crew isn't engaged. You:",options:[{text:"Pivot to a real story or ask the crew a direct question — I need to earn their attention.",scores:[5,1,2,1,1,1]},{text:"Complete the required talk as documented. Attendance is mandatory.",scores:[1,5,1,1,1,1]},{text:"Stop the formal talk and shift to interactive demonstration.",scores:[2,1,5,1,1,1]},{text:"Keep the critical safety information tight — focus on the one or two things that could kill someone today.",scores:[1,2,2,5,1,1]},{text:"Note the engagement levels and cross-reference with recent incident data.",scores:[1,1,2,1,5,2]}]},
+  {section:'people',text:"A green worker makes a safety mistake that could have been serious but wasn't. Your first priority:",options:[{text:"Make sure he knows he's not in trouble, then have a genuine conversation about what happened.",scores:[5,1,2,1,1,1]},{text:"Issue the appropriate corrective action — consequences must be consistent regardless of experience.",scores:[1,5,1,1,1,1]},{text:"Walk him through exactly what happened, the hazard, and what he should do differently.",scores:[2,1,5,1,1,1]},{text:"Assess whether the near-miss exposed a systemic hazard.",scores:[1,1,2,2,4,3]},{text:"Log it as a near-miss, investigate contributing factors, and use it in a formal corrective program.",scores:[1,2,1,1,5,2]}]},
+  {section:'people',text:"An experienced worker with 20 years on the job dismisses your concern as 'new-school overcaution.' How do you handle it?",options:[{text:"Respect the experience but connect the safety concern to something that matters to them personally.",scores:[5,1,2,1,1,1]},{text:"Make it clear that experience doesn't change the standard. Enforce it, document it, and move on.",scores:[1,5,1,1,1,1]},{text:"Challenge him to explain the hazard from his perspective — sometimes veterans know something worth learning.",scores:[2,1,5,1,2,2]},{text:"Assess whether the attitude represents an active risk to the crew.",scores:[1,3,1,4,1,1]},{text:"Ask him to walk me through his method — the data will be in the incident history for that task type.",scores:[1,2,2,1,4,3]}]},
+  {section:'people',text:"Which best describes how you learn and prefer to pass knowledge on?",options:[{text:"Through conversation and observation — I learn from listening to people, and I teach the same way.",scores:[5,1,2,1,1,1]},{text:"Through procedure and structure — written standards and formal process define best practice.",scores:[1,5,1,1,2,1]},{text:"Through demonstration and explanation — show it, explain it, then watch them do it.",scores:[2,1,5,1,1,1]},{text:"Through high-stakes practice — I learn most under pressure.",scores:[1,1,1,5,1,2]},{text:"Through data and pattern analysis — I find the underlying logic and teach from principles.",scores:[1,1,2,1,3,5]}]},
+  {section:'people',text:"You're placed on a site where safety culture is visibly poor. Your first 30 days:",options:[{text:"Spend the first two weeks doing nothing but listening and building relationships.",scores:[5,1,2,1,1,1]},{text:"Do a comprehensive compliance audit and build a formal corrective action program.",scores:[1,5,1,1,3,2]},{text:"Design a targeted training program that addresses the specific behaviors I see failing.",scores:[2,1,5,1,1,1]},{text:"Identify the three highest-consequence hazards and focus all energy on eliminating those first.",scores:[1,2,1,5,2,2]},{text:"Pull all available safety data and present leadership with a data-driven roadmap.",scores:[1,1,1,1,5,3]}]},
+  {section:'pressure',text:"An emergency unfolds — a worker is down, the scene is chaotic, multiple people shouting. You:",options:[{text:"Move quickly to the injured worker and try to calm the emotional temperature.",scores:[3,1,1,3,1,1]},{text:"Ensure the scene is secured per the emergency action plan and all protocols are followed.",scores:[1,3,1,3,1,1]},{text:"Make sure someone with first aid training is on the worker and keep bystanders calm.",scores:[2,1,3,3,1,1]},{text:"Take command immediately — clear the area, designate roles, call EMS, manage the scene.",scores:[1,1,1,5,1,1]},{text:"Coordinate from a position where I can see the full scene and direct resources.",scores:[1,1,1,4,3,3]}]},
+  {section:'pressure',text:"48 hours before a surprise OSHA inspection your PM just got tipped about. How do you spend that time?",options:[{text:"Walk the site and talk to the crews — if they know why compliance matters, they'll perform better.",scores:[4,2,3,1,1,1]},{text:"Conduct a full mock inspection, generate a punch list, and drive corrective actions in priority order.",scores:[1,5,1,1,2,1]},{text:"Brief every crew and supervisor on what to expect — knowledge reduces panic.",scores:[2,2,5,1,1,1]},{text:"Identify and address the highest-severity violations first.",scores:[1,3,1,5,2,2]},{text:"Pull recent inspection reports and near-miss data to determine where the highest-probability findings will be.",scores:[1,2,1,1,5,3]}]},
+  {section:'pressure',text:"Three concurrent high-risk activities, you can only be in one place. How do you decide?",options:[{text:"Where crew morale and voluntary compliance is lowest — where my presence has the most influence.",scores:[4,1,2,2,1,1]},{text:"At the activity with the highest regulatory scrutiny and liability exposure.",scores:[1,5,1,1,2,1]},{text:"Where the least experienced crew is working — highest risk is always where knowledge is lowest.",scores:[2,1,5,1,1,1]},{text:"At the activity with the highest potential for a catastrophic, unrecoverable incident.",scores:[1,2,1,5,1,2]},{text:"I'd use leading indicator data to determine which activity has the highest statistical probability of an incident.",scores:[1,1,1,2,5,3]}]},
+  {section:'pressure',text:"After a serious incident, the crew is shaken and management is panicking. Your role in the next 2 hours:",options:[{text:"Stabilize the emotional environment first — a crew in crisis can't participate in an effective investigation.",scores:[5,1,2,2,1,1]},{text:"Preserve evidence, secure the scene, and ensure the incident is reported to all required regulatory bodies.",scores:[1,5,1,1,2,1]},{text:"Be present for the crew — acknowledge what happened and give accurate information to reduce rumors.",scores:[3,1,4,1,1,1]},{text:"Take command, manage the immediate aftermath, coordinate with EMS and legal.",scores:[1,2,1,5,1,1]},{text:"Begin the formal investigation — collect witness statements and build a preliminary timeline.",scores:[1,2,1,2,5,2]}]},
+  {section:'pressure',text:"The project is running weeks behind schedule and pressure to cut corners is coming from multiple directions. How do you hold the line?",options:[{text:"Build enough trust that people come to me for compliant solutions rather than going around me.",scores:[5,2,1,1,1,1]},{text:"Document every directive and every compliance decision — the paper trail is my protection.",scores:[1,5,1,1,2,1]},{text:"Make sure the crew understands that shortcuts under schedule pressure are exactly when incidents happen.",scores:[2,1,5,1,1,1]},{text:"Identify the two or three safety conditions that if compromised would be the highest catastrophic risk.",scores:[1,3,1,5,1,2]},{text:"Present management with the statistical correlation between schedule pressure and incident rate.",scores:[1,2,1,1,4,4]}]},
+  {section:'analysis',text:"After six months, you're asked to present the state of site safety to the owner's rep. What do you lead with?",options:[{text:"The culture shift — stories of crews reporting hazards voluntarily and the team dynamic that's developed.",scores:[5,1,2,1,1,1]},{text:"Compliance performance — zero OSHA recordables, full documentation, no open corrective actions.",scores:[1,5,1,1,2,1]},{text:"Workforce development — certifications completed and observable improvements in how crews handle hazards.",scores:[2,1,5,1,1,1]},{text:"Risk reduction — the critical near-misses that were caught and the controls that prevented them.",scores:[1,2,1,5,2,1]},{text:"The data dashboard — leading and lagging indicators, trend lines, benchmarks, and predictive risk modeling.",scores:[1,1,1,1,5,2]}]},
+  {section:'analysis',text:"A particular type of injury keeps happening across multiple subcontractors, shifts, and work areas. Your response:",options:[{text:"Bring the relevant foremen and workers together — a shared conversation often surfaces the real cause fastest.",scores:[4,1,2,1,2,1]},{text:"Issue a site-wide stand-down and require documented corrective actions from every sub.",scores:[1,5,1,1,2,1]},{text:"Design a targeted training intervention addressing the behavior or knowledge gap driving the pattern.",scores:[2,1,5,1,1,1]},{text:"Escalate immediately to management — a cross-site pattern suggests a systemic failure.",scores:[1,2,1,4,2,2]},{text:"Build a formal trend analysis, quantify the pattern, and propose a systemic corrective program.",scores:[1,1,1,1,5,3]}]},
+  {section:'analysis',text:"You're brought in during the planning phase — before any work has started. Your highest-value contribution:",options:[{text:"Meeting with the crews who'll be doing the work and designing safety around that reality.",scores:[4,1,2,1,1,2]},{text:"Reviewing the contract and building a compliance matrix before Day 1.",scores:[1,5,1,1,2,2]},{text:"Assessing the workforce's baseline safety competency and designing the training program before mobilization.",scores:[2,1,5,1,1,1]},{text:"Mapping the highest-consequence emergency scenarios and building a response plan.",scores:[1,2,1,5,2,1]},{text:"Reviewing plans to identify hazards that can be engineered out before the work is locked in.",scores:[1,2,1,1,3,5]}]},
+  {section:'analysis',text:"You encounter a hazard that no existing standard fully addresses — it's genuinely novel. You:",options:[{text:"Talk to the crew and engineers closest to the work — they often have the most practical insight.",scores:[4,1,1,1,1,3]},{text:"Apply the most conservative applicable standard and document the decision.",scores:[1,5,1,1,1,2]},{text:"Make sure every person working near the hazard fully understands it and the precautions being taken.",scores:[2,1,5,1,1,1]},{text:"Ensure the highest-risk phase of work has a defined emergency response plan before it begins.",scores:[1,2,1,5,1,2]},{text:"Research consensus standards and industry incident databases to develop a formal written control recommendation.",scores:[1,1,1,1,4,5]}]},
+  {section:'analysis',text:"Looking at the safety professionals you've most respected — what trait do they share that you most want to embody?",options:[{text:"They make crews feel respected. People genuinely want to work safely around them.",scores:[5,1,2,1,1,1]},{text:"They never bend. Their consistency is their integrity — you always know exactly where they stand.",scores:[1,5,1,1,1,1]},{text:"They make safety knowledge stick. Workers they've trained carry better habits for years.",scores:[2,1,5,1,1,1]},{text:"They're calm when everything is falling apart. You want them next to you in the worst moments.",scores:[1,1,1,5,1,1]},{text:"They see what's coming before it arrives. Their analysis is predictive, not reactive.",scores:[1,1,1,1,4,4]}]},
+];
+
+const ARCHETYPES = [
+  {id:'diplomat',name:'The Diplomat',subtitle:'Collaborative Culture Builder',description:"Your greatest strength is making safety feel like a shared value rather than an imposed rule. You build the kind of trust that gets hazards reported early — before they become incidents. Crews work safer around you not out of fear, but because you've earned their respect.",fit:"Long-term capital projects, complex multi-trade environments, and enterprise clients who prioritize a mature, proactive safety culture.",strength:"You prevent the 'us vs. them' dynamic. When you're on a site, workers report near-misses, ask questions before acting, and own the culture alongside you.",development:"In high-urgency enforcement situations, push yourself to act decisively without over-relying on conversation first."},
+  {id:'enforcer',name:'The Enforcer',subtitle:'Regulatory Compliance Specialist',description:"You are an organization's shield against catastrophic liability. Your exceptional attention to detail and zero-tolerance approach ensures systemic shortcuts get eliminated before they compound into major incidents. You don't interpret — you apply, document, and enforce.",fit:"High-risk regulatory environments, nuclear and petrochemical facilities, heavy civil infrastructure, and fast-paced industrial turnarounds where strict compliance is life or death.",strength:"Your documentation is bulletproof and your consistency creates the certainty that prevents regulatory fines, major accidents, and catastrophic liability.",development:"Invest in relationship-building skills — compliance is more durable when people understand why, not just that they must."},
+  {id:'educator',name:'The Educator',subtitle:'Workforce Development Specialist',description:"You don't just correct hazards — you eliminate the knowledge gap that caused them. Your ability to translate complex regulatory standards into language any worker can understand makes you one of the highest-ROI safety professionals in the industry.",fit:"Sites with high concentrations of green or entry-level workers, organizations rebuilding a poor safety culture, and any project where upskilling the workforce is a strategic priority.",strength:"You solve the skilled-labor shortage problem by building safety competence from the ground up — permanently upgrading crews rather than just managing them.",development:"In high-urgency situations, be willing to act decisively first and teach afterward — not every teachable moment has time for a full lesson."},
+  {id:'crisis',name:'The Crisis Manager',subtitle:'Emergency Response Specialist',description:"When severe incidents occur, most people panic — you don't. Your ability to take operational command in the critical first minutes, communicate clearly under pressure, and make decisive calls without freezing is one of the rarest traits in field safety.",fit:"Fast-moving and unpredictable environments, emergency response operations, volatile industrial and chemical processing facilities, and any project where incident response time directly determines outcome severity.",strength:"You save lives in the first 10 minutes. Your calm under chaos provides the operational anchor that prevents a serious incident from becoming a catastrophe.",development:"Apply the same urgency and focus to prevention that you bring to response — the best crisis manager is the one whose crisis skills never get tested."},
+  {id:'auditor',name:'The Auditor',subtitle:'Risk Analyst & Data Specialist',description:"You find the invisible risks — the ones that field walks miss because they only appear as patterns, not isolated incidents. By aggregating leading and lagging indicators across subcontractors and project phases, you identify micro-trends before they become major incidents.",fit:"Massive multi-contractor programs, insurance-driven wrap-up programs (OCIP/CCIP), pipeline integrity monitoring, and owner-level corporate compliance tracking.",strength:"You make the invisible visible. Your analysis identifies systemic failure before it manifests as injury, protecting organizations at scale.",development:"Make sure your data insights translate into field-level action — the best analysis has no value if it doesn't change what happens on the ground."},
+  {id:'strategist',name:'The Strategist',subtitle:'Technical Subject Matter Expert',description:"When technical complexity exceeds what standard safety rules address, you're the one who bridges engineering and safety. Your ability to engage credibly with engineering teams and design hazards out at the source makes you invaluable on the industry's most complex projects.",fit:"High-voltage electrical buildouts, complex marine construction, aerospace and chemical environments, or any project requiring technically unprecedented safety engineering.",strength:"You design the hazard out before work begins — your solutions are durable because they're engineered in, not managed around.",development:"Technical authority is most effective when paired with strong communication skills — the most elegant solution still needs to be followed by field crews."},
+];
+
+// ── STATE ──
+let answers = {}, currentSection = 0, candidateData = {}, lastRanked = [];
+const sectionIds = [...new Set(QUESTIONS.map(q => q.section))];
+
+// ── LOGO ──
+function makeLogo(dark) {
+  return `
+    <svg class="logo-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="18" fill="#4a9e2f"/>
+      <ellipse cx="20" cy="20" rx="18" ry="18" stroke="rgba(255,255,255,0.15)" stroke-width="1" fill="none"/>
+      <ellipse cx="20" cy="20" rx="10" ry="18" stroke="rgba(255,255,255,0.15)" stroke-width="1" fill="none"/>
+      <line x1="2" y1="20" x2="38" y2="20" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+      <line x1="4" y1="13" x2="36" y2="13" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+      <line x1="4" y1="27" x2="36" y2="27" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+      <path d="M11 20.5l6.5 6.5 12-13" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="logo-text" style="${dark?'color:rgba(255,255,255,0.9)':''}">Safeport DNA</span>`;
+}
+
+function injectLogos() {
+  const sidebar = document.getElementById('logo-sidebar');
+  if (sidebar) sidebar.innerHTML = makeLogo(true);
+}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', injectLogos);
+
+// ── NAV ──
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function goToLanding() { showScreen('landing'); }
+function goToIntake()  { showScreen('intake'); }
+
+function startAssessment() {
+  const fn = document.getElementById('first-name').value.trim();
+  const ln = document.getElementById('last-name').value.trim();
+  const em = document.getElementById('email').value.trim();
+  if (!fn || !ln || !em) { document.getElementById('intake-warn').style.display = 'block'; return; }
+  candidateData = { name: fn+' '+ln, firstName: fn, email: em, years: document.getElementById('years-exp').value, industry: document.getElementById('industry').value };
+  buildAssessment();
+  showScreen('assessment');
+  updateSidebar();
+}
+
+// ── BUILD ──
+function buildAssessment() {
+  const sb = document.getElementById('sidebar-sections');
+  sb.innerHTML = '';
+  SECTIONS.forEach((sec, i) => {
+    const d = document.createElement('div');
+    d.id = 'sidebar-sec-' + i;
+    d.textContent = sec.label;
+    d.style.cssText = `font-size:11px;font-weight:600;color:${i===0?'white':'#8a9e8b'};padding:5px 14px;border-radius:20px;border:1px solid ${i===0?'#4a9e2f':'#e2e8e2'};background:${i===0?'#4a9e2f':'#fff'};white-space:nowrap;cursor:default;`;
+    sb.appendChild(d);
+  });
+
+  const main = document.getElementById('question-sections');
+  main.innerHTML = '';
+  SECTIONS.forEach((sec, si) => {
+    const secQs = QUESTIONS.filter(q => q.section === sec.id);
+    const globalStart = QUESTIONS.findIndex(q => q.section === sec.id);
+    const div = document.createElement('div');
+    div.className = 'q-section' + (si === 0 ? ' active' : '');
+    div.id = 'qsec-' + si;
+
+    let html = `<div class="sec-intro">
+      <div class="sec-num">Section ${si+1} of ${SECTIONS.length}</div>
+      <div class="sec-title">${sec.label}</div>
+      <div class="sec-body">Select the response that most honestly reflects how you think and behave — not the answer you think is best.</div>
+    </div>`;
+
+    secQs.forEach((q, qi) => {
+      const gi = globalStart + qi;
+      html += `<div class="q-block" id="qblock-${gi}" style="animation-delay:${qi*0.05}s">
+        <div class="q-num">Question ${gi+1} of ${QUESTIONS.length}</div>
+        <div class="q-text">${q.text}</div>
+        <div class="options" id="opts-${gi}">`;
+      q.options.forEach((o, oi) => {
+        html += `<button class="opt-btn" onclick="selectAnswer(${gi},${oi},this)"><div class="opt-radio"></div><div>${o.text}</div></button>`;
+      });
+      html += `</div></div>`;
+    });
+
+    html += `<div class="unanswered-note" id="warn-${si}">Please answer all questions before continuing.</div>
+    <div class="sec-nav">
+      ${si > 0 ? `<button class="btn-secondary" onclick="prevSection()">← Previous</button>` : ''}
+      <div class="nav-counter" id="qcount-${si}">0 / ${secQs.length} answered</div>
+      ${si < SECTIONS.length-1
+        ? `<button class="btn-primary" onclick="nextSection(${si})">Continue <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:white"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>`
+        : `<button class="btn-primary" onclick="finishAssessment()">View My Results <svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:white"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>`
+      }
+    </div>`;
+
+    div.innerHTML = html;
+    main.appendChild(div);
+  });
+}
+
+function selectAnswer(qi, oi, btn) {
+  document.querySelectorAll(`#opts-${qi} .opt-btn`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  answers[qi] = oi;
+  updateCounter();
+  updateSidebar();
+}
+
+function updateCounter() {
+  const idxs = QUESTIONS.map((q,i) => ({sec: sectionIds.indexOf(q.section), i})).filter(x => x.sec === currentSection);
+  const answered = idxs.filter(x => answers[x.i] !== undefined).length;
+  const el = document.getElementById('qcount-' + currentSection);
+  if (el) el.textContent = `${answered} / ${idxs.length} answered`;
+}
+
+function updateSidebar() {
+  const pct = Math.round((Object.keys(answers).length / QUESTIONS.length) * 100);
+  document.getElementById('sidebar-progress').style.width = pct + '%';
+  sectionIds.forEach((_, i) => {
+    const el = document.getElementById('sidebar-sec-' + i);
+    if (!el) return;
+    if (i === currentSection) {
+      el.style.cssText = `font-size:11px;font-weight:600;color:white;padding:5px 14px;border-radius:20px;border:1px solid #4a9e2f;background:#4a9e2f;white-space:nowrap;`;
+    } else if (i < currentSection) {
+      el.style.cssText = `font-size:11px;font-weight:600;color:#4a9e2f;padding:5px 14px;border-radius:20px;border:1px solid #4a9e2f;background:#eef6ea;white-space:nowrap;`;
+    } else {
+      el.style.cssText = `font-size:11px;font-weight:600;color:#8a9e8b;padding:5px 14px;border-radius:20px;border:1px solid #e2e8e2;background:#fff;white-space:nowrap;`;
+    }
+  });
+}
+
+function nextSection(si) {
+  const sid = sectionIds[si];
+  const unanswered = QUESTIONS.map((q,i) => ({sid: q.section, i})).filter(x => x.sid === sid && answers[x.i] === undefined);
+  if (unanswered.length > 0) {
+    document.getElementById('warn-' + si).style.display = 'block';
+    document.getElementById('qblock-' + unanswered[0].i).scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  document.getElementById('warn-' + si).style.display = 'none';
+  document.getElementById('qsec-' + si).classList.remove('active');
+  currentSection = si + 1;
+  document.getElementById('qsec-' + currentSection).classList.add('active');
+  updateSidebar(); updateCounter();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function prevSection() {
+  document.getElementById('qsec-' + currentSection).classList.remove('active');
+  currentSection--;
+  document.getElementById('qsec-' + currentSection).classList.add('active');
+  updateSidebar(); updateCounter();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ── SCORING ──
+function finishAssessment() {
+  const lastSi = SECTIONS.length - 1;
+  const sid = sectionIds[lastSi];
+  const unanswered = QUESTIONS.map((q,i) => ({sid: q.section, i})).filter(x => x.sid === sid && answers[x.i] === undefined);
+  if (unanswered.length > 0) {
+    document.getElementById('warn-' + lastSi).style.display = 'block';
+    document.getElementById('qblock-' + unanswered[0].i).scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+
+  const keys = ['diplomat','enforcer','educator','crisis','auditor','strategist'];
+  const scores = {diplomat:0,enforcer:0,educator:0,crisis:0,auditor:0,strategist:0};
+  const maxP   = {diplomat:0,enforcer:0,educator:0,crisis:0,auditor:0,strategist:0};
+
+  QUESTIONS.forEach((q, qi) => {
+    const oi = answers[qi];
+    if (oi === undefined) return;
+    q.options[oi].scores.forEach((s, ki) => scores[keys[ki]] += s);
+    keys.forEach((k, ki) => maxP[k] += Math.max(...q.options.map(o => o.scores[ki])));
+  });
+
+  const ranked = keys
+    .map(k => ({key:k, score: Math.round((scores[k]/maxP[k])*100), archetype: ARCHETYPES.find(a => a.id===k)}))
+    .sort((a,b) => b.score - a.score);
+
+  lastRanked = ranked;
+  buildResults(ranked);
+  showScreen('results');
+  // Auto-fire email silently on completion
+  autoSendResults(ranked);
+}
+
+// ── RESULTS ──
+function buildResults(ranked) {
+  const top = ranked[0], sec = ranked[1];
+  const a = top.archetype, a2 = sec.archetype;
+
+  document.getElementById('res-name').textContent = candidateData.name;
+
+  document.getElementById('primary-block').innerHTML = `
+    <div class="primary-card">
+      <div class="pc-tag">Primary Archetype</div>
+      <div class="pc-name">${a.name}</div>
+      <div class="pc-sub">${a.subtitle}</div>
+      <div class="pc-accent-bar"></div>
+      <div class="pc-desc">${a.description}</div>
+    </div>`;
+
+  document.getElementById('secondary-block').innerHTML = `
+    <div class="secondary-card">
+      <div class="sc-left"><div class="sc-tag">Secondary Archetype</div><div class="sc-name">${a2.name}</div></div>
+      <div class="sc-div"></div>
+      <div class="sc-note">${a2.subtitle} — your secondary profile complements your primary in environments that require both simultaneously.</div>
+    </div>`;
+
+  document.getElementById('fit-cards').innerHTML = `
+    <div class="fit-card"><div class="fit-card-tag">Best Project Environments</div><div class="fit-card-text">${a.fit}</div></div>
+    <div class="fit-card"><div class="fit-card-tag">Core Strength</div><div class="fit-card-text">${a.strength}</div></div>
+    <div class="fit-card"><div class="fit-card-tag">Growth Area</div><div class="fit-card-text">${a.development}</div></div>`;
+
+  document.getElementById('score-rows').innerHTML = ranked.map((r,i) =>
+    `<div class="score-row rank-${i+1}">
+      <div class="score-name">${r.archetype.name}</div>
+      <div class="score-track"><div class="score-fill" id="sf-${i}"></div></div>
+      <div class="score-pct">${r.score}%</div>
+    </div>`
+  ).join('');
+
+  ranked.forEach((r, i) => {
+    setTimeout(() => {
+      const el = document.getElementById('sf-' + i);
+      if (el) el.style.width = r.score + '%';
+    }, 100 + i * 80);
+  });
+
+  document.getElementById('next-card').innerHTML = `
+    <div class="next-h">What Happens Next</div>
+    <div class="next-body">A member of the Safeport team will review your Safety DNA profile alongside your background and certifications. Your results will be used to identify project types and client environments that match your natural strengths.<br><br>
+    Questions? Reach out to <strong>assessments@safeportdna.com</strong>. Thank you for completing the assessment, <strong>${candidateData.firstName}</strong>.</div>`;
+}
+
+// ── AUTO EMAIL VIA EMAILJS (fires silently on completion) ──
+async function autoSendResults(ranked) {
+  const now = new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
+  const top = ranked[0], sec = ranked[1];
+  const a = top.archetype, a2 = sec.archetype;
+
+  const message =
+`SAFEPORT DNA — SAFETY PROFESSIONAL ASSESSMENT
+Date: ${now}
+Candidate: ${candidateData.name}
+Email: ${candidateData.email}
+Experience: ${candidateData.years || 'Not specified'}
+Industry: ${candidateData.industry || 'Not specified'}
+
+PRIMARY ARCHETYPE: ${a.name.toUpperCase()}
+${a.subtitle}
+
+${a.description}
+
+Best Environments: ${a.fit}
+Core Strength: ${a.strength}
+Growth Area: ${a.development}
+
+SECONDARY: ${a2.name.toUpperCase()} — ${a2.subtitle}
+${a2.description}
+
+FULL BREAKDOWN
+${ranked.map(r => `${r.archetype.name}: ${r.score}%`).join('\n')}
+
+Safeport DNA · assessments@safeportdna.com`;
+
+  const status = document.getElementById('email-status');
+  try {
+    const resp = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        service_id:  EJS_SERVICE,
+        template_id: EJS_TEMPLATE,
+        user_id:     EJS_KEY,
+        template_params: {
+          candidate_name: candidateData.name,
+          reply_to:       candidateData.email,
+          message:        message,
+        }
+      })
+    });
+    if (resp.ok) {
+      if (status) { status.textContent = '✓ Your results have been sent to Safeport DNA.'; status.style.color = '#4a9e2f'; }
+    } else {
+      const errText = await resp.text();
+      throw new Error(errText);
+    }
+  } catch(e) {
+    console.warn('AutoEmail failed:', e);
+    if (status) { 
+      status.innerHTML = `⚠ Auto-send failed (${e.message}). <button onclick="sendViaMailto(false)" style="background:var(--sidebar-bg);color:white;border:none;padding:6px 16px;border-radius:6px;cursor:pointer;font-size:12px;margin-left:8px;">Send Manually</button>`;
+    }
+  }
+}
+
+// ── MANUAL MAILTO FALLBACK ──
+function sendViaMailto(auto) {
+  const now = new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
+  const top = lastRanked[0], sec = lastRanked[1];
+  const a = top.archetype, a2 = sec.archetype;
+
+  const subject = encodeURIComponent(`New Assessment — ${candidateData.name}`);
+  const body = encodeURIComponent(
+`SAFEPORT DNA — SAFETY PROFESSIONAL ASSESSMENT
+Date: ${now}
+Candidate: ${candidateData.name}
+Email: ${candidateData.email}
+Experience: ${candidateData.years || 'Not specified'}
+Industry: ${candidateData.industry || 'Not specified'}
+
+PRIMARY ARCHETYPE: ${a.name.toUpperCase()}
+${a.subtitle}
+
+${a.description}
+
+Best Environments: ${a.fit}
+Core Strength: ${a.strength}
+Growth Area: ${a.development}
+
+SECONDARY: ${a2.name.toUpperCase()} — ${a2.subtitle}
+
+FULL BREAKDOWN
+${lastRanked.map(r => `${r.archetype.name}: ${r.score}%`).join('\n')}
+
+Safeport DNA · assessments@safeportdna.com`);
+
+  const mailto = `mailto:assessments@safeportdna.com?cc=sergio@safeport.co,jennifer@safeport.co&subject=${subject}&body=${body}`;
+  window.open(mailto, '_blank');
+
+  const status = document.getElementById('email-status');
+  const btn = document.getElementById('email-btn');
+  if (status) {
+    status.textContent = auto
+      ? '✓ Your mail app opened — click Send to submit your results to Safeport.'
+      : '✓ Email draft opened — click Send in your mail app.';
+    status.style.color = 'var(--accent)';
+  }
+  if (btn && !auto) {
+    btn.innerHTML = 'Submitted ✓';
+    btn.style.background = 'var(--accent-dark)';
+  }
+}
+
+function retakeAssessment() {
+  answers = {}; currentSection = 0; lastRanked = [];
+  buildAssessment();
+  showScreen('assessment');
+  updateSidebar();
+}
+</script>
+</body>
+</html>
